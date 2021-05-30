@@ -11,10 +11,10 @@ namespace RestApis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
         private readonly IDataRepository<Employee> _dataRepository;
-        public EmployeController(IDataRepository<Employee> dataRepository)
+        public EmployeeController(IDataRepository<Employee> dataRepository)
         {
             _dataRepository = dataRepository;
         }
@@ -24,7 +24,7 @@ namespace RestApis.Controllers
         public IActionResult Get()
         {
             IEnumerable<Employee> employees = _dataRepository.GetAll();
-            return Ok(employees);
+            return Ok(employees); 
         }
 
         //GET: api/Employee/5
@@ -46,7 +46,7 @@ namespace RestApis.Controllers
             
             if (employee == null)
             {
-                return NotFound("Employee field is Null");
+                return BadRequest("Employee field is Null");
             }
             _dataRepository.Add(employee);
             return CreatedAtRoute(
@@ -54,6 +54,43 @@ namespace RestApis.Controllers
                 new { Id = employee.EmployeeId },
                 employee);
         }
+
+
+        //PUT: api/Employee/5
+        [HttpPatch("{id}")]
+        public IActionResult Patch(long id, [FromBody] Employee employee)
+        {
+            
+            if (employee == null)
+            {
+                return BadRequest("Couldn't Found Employee Record");
+            }
+            Employee employeeToUpdate = _dataRepository.Get(id);
+            if (employeeToUpdate == null)
+            {
+                return NotFound("couldn't found Employee Record");
+
+            }
+            _dataRepository.Update(employeeToUpdate, employee);
+            return Ok(employeeToUpdate);
+        }
+
+        //DELETE: api/Employee/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(long id)
+        {
+            Employee employee = _dataRepository.Get(id);
+
+            if (employee == null)
+            {
+                return NotFound("Couldn't Found Employee Record");
+            }
+            _dataRepository.Delete(employee);
+            return Ok();
+        }
+
+
+
 
 
     }

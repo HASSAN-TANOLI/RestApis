@@ -17,27 +17,35 @@ namespace RestApis.Models.DataManager
         }
         public void Add(Employee entity)
         {
-            throw new NotImplementedException();
+            _employeeContext.Employees.Add(entity);
+            _employeeContext.SaveChanges();
         }
 
         public void Delete(Employee entity)
         {
-            throw new NotImplementedException();
+            _employeeContext.Employees.Remove(entity);
+            _employeeContext.SaveChanges();
         }
 
         public Employee Get(long id)
         {
-            throw new NotImplementedException();
+            return _employeeContext.Employees.FirstOrDefault(e => e.EmployeeId == id);
         }
 
         public IEnumerable<Employee> GetAll()
         {
-            throw new NotImplementedException();
+            return _employeeContext.Employees.ToList();
         }
 
-        public void Update(Employee dbEntity, Employee entity)
+        public void Update(Employee employee, Employee entity)
         {
-            throw new NotImplementedException();
+            employee.FirstName = entity.FirstName;
+            employee.LastName = entity.LastName;
+            employee.Email = entity.Email;
+            employee.DOB = entity.DOB;
+            employee.PhoneNumber = entity.PhoneNumber;
+
+            _employeeContext.SaveChanges();
         }
     }
 }
